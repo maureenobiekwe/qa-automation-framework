@@ -21,6 +21,7 @@ sites, so no real or client data is involved.
 | API | list, get, 404, create, filter by user | api |
 | API contract | JSON schema on one and all posts, response-time threshold, chained flow, update/delete, invalid IDs | api, performance, negative |
 | API security | 5000-character payload, script in a field, sensitive fields in a response | security |
+| API regression (Newman) | 8 Postman requests with chained data, exact status codes and a response-time check, run in CI | api, regression |
 | Accessibility | axe-core WCAG 2.1 AA scan of login and inventory, keyboard-only login, focus indicator | a11y |
 | Faulty demo users | `problem_user` images and sorting, `performance_glitch_user` login time | regression, performance |
 
@@ -58,6 +59,28 @@ An HTML report is written to `reports/report.html` on every run. Open a failure 
 
 `.github/workflows/tests.yml` runs the suite in parallel on every push to `main`, on pull
 requests, and on demand. The HTML report is uploaded on every run, traces and screenshots on failure.
+
+## API regression with Newman
+
+`api-regression/` holds a Postman collection that runs from the command line and in CI
+(`.github/workflows/api-regression.yml`). It is the pattern I use for API regression on
+real projects, shown here against the public JSONPlaceholder API:
+
+- exact status codes (200, 201, 404), never "any 2xx"
+- chaining: one response feeds the next request
+- a unique run id on created data, so repeated runs never collide
+- a response-time check on read endpoints
+- no secrets in files; the workflow shows how to pass them from repository secrets
+- pinned Newman major version and a JUnit report uploaded on every run
+
+```bash
+npx newman@6 run api-regression/demo-api.postman_collection.json -e api-regression/demo.postman_environment.json
+```
+
+Last run: 8 requests, 19 assertions, 0 failed. The workflow runs on push, pull request, a
+weekday schedule and on demand. On a real project the same job runs after each deploy to the
+test environment; the demo has no deploy step, so that part is described, not wired. Details
+are in [api-regression/README.md](api-regression/README.md).
 
 ## Known limits
 

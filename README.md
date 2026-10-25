@@ -2,6 +2,10 @@
 ![tests](https://github.com/maureenobiekwe/qa-automation-framework/actions/workflows/tests.yml/badge.svg)
 ![api-regression](https://github.com/maureenobiekwe/qa-automation-framework/actions/workflows/api-regression.yml/badge.svg)
 
+
+You can check out other repos: https://github.com/maureenobiekwe/qa-autopilot
+https://github.com/maureenobiekwe/qa-playbook
+
 Playwright + pytest suite in Python, using the Page Object Model. It covers the
 SauceDemo web shop (UI) and the JSONPlaceholder API. Both are public demo
 sites, so no real or client data is involved.

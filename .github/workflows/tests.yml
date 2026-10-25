@@ -15,7 +15,12 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: playwright install --with-deps chromium
-      - run: pytest
+      - run: pytest -n auto
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: html-report
+          path: reports/
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

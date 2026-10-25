@@ -5,3 +5,5 @@ __pycache__/
 test-results/
 reports/
 .env
+node_modules/
+newman-results.xml

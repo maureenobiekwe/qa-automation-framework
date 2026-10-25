@@ -1,0 +1,40 @@
+name: api-regression
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  # A real project would also run this after each deploy (workflow_run or a job that needs the deploy job).
+  schedule:
+    - cron: "0 6 * * 1-5"
+
+permissions:
+  contents: read
+
+jobs:
+  newman:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      # Pin the Newman major so a new release cannot change results unannounced.
+      - name: Run the collection
+        run: >-
+          npx --yes newman@6 run api-regression/demo-api.postman_collection.json
+          -e api-regression/demo.postman_environment.json
+          --timeout-request 15000
+          --reporters cli,junit
+          --reporter-junit-export newman-results.xml
+        # The target is public, so no secrets are needed here. For a private API, pass them from the
+        # repository secrets, never from a file:
+        #   --env-var "adminEmail=${{ secrets.API_ADMIN_EMAIL }}" --env-var "adminPassword=${{ secrets.API_ADMIN_PASSWORD }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: newman-results
+          path: newman-results.xml

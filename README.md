@@ -1,4 +1,6 @@
 # QA Automation Framework
+![tests](https://github.com/maureenobiekwe/qa-automation-framework/actions/workflows/tests.yml/badge.svg)
+![api-regression](https://github.com/maureenobiekwe/qa-automation-framework/actions/workflows/api-regression.yml/badge.svg)
 
 Playwright + pytest suite in Python, using the Page Object Model. It covers the
 SauceDemo web shop (UI) and the JSONPlaceholder API. Both are public demo
